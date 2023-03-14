@@ -1,4 +1,3 @@
-::: mermaid
 sequenceDiagram
     participant browser
     participant JavaScript Code
@@ -11,4 +10,4 @@ sequenceDiagram
     JavaScript Code->>browser: detects submit, calls form.onSubmit and pushes note into notes, rerenders page
     JavaScript Code->>server: POST /new_note_spa (json)
     activate server
-:::
+    deactivate server
