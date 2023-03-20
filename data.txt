@@ -1,0 +1,6 @@
+Jason Liu	waffle iron	80	2
+Jason Liu	blender	200	1
+Jason Liu	knife 	10	4
+Bell He	pot	10	20   
+Bell He	knife	12	1
+Bell He	waffle iron	10	1

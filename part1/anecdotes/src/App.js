@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import SchedulingSystem from './SchedulingSystem'
 
 const App = () => {
   const anecdotes = [
@@ -18,6 +19,7 @@ const App = () => {
 
   const changeQuote = () => {
     setSelected(Math.floor(Math.random() * anecdotes.length))
+    console.log(`changed quote to ${selected}`);
   }
 
   const handleVote = () => { 
@@ -29,17 +31,18 @@ const App = () => {
   return (
     <>
       <h1>Anecdote of the day</h1>
-      {anecdotes[selected]}
+      <h2>{anecdotes[selected]}</h2>
       <div>
-        has {votes[selected]} votes
+        <h3>has {votes[selected]} votes</h3>
       </div>
       <button onClick={handleVote}>Vote</button>
       <button onClick={changeQuote}>Next anecdote</button>
       <h1>Anecdote with most votes</h1>
-      {anecdotes[votes.indexOf(most)]}
+      <h2>{anecdotes[votes.indexOf(most)]}</h2>
       <div>
-        has {most} votes
+        <h3>has {most} votes</h3>
       </div>
+      <SchedulingSystem/>
     </>
   )
 }
