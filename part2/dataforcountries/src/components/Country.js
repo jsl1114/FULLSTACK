@@ -52,5 +52,4 @@ const Country = ({ country }) => {
   )
 }
 
-// REACT_APP_OPENWEATHER_API_KEY = 9a7bbee8f57201de3d689ba9d0682cba
 export default Country
