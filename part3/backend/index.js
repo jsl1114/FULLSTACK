@@ -1,7 +1,17 @@
 const express = require("express")
 const app = express()
+const morgan = require('morgan')
+const cors = require('cors')
+
+const unknownPath = (req, res) => {
+  res.status(404).json({
+    err: 'Unknown path'
+  })
+}
 
 app.use(express.json())
+app.use(morgan('tiny'))
+app.use(cors())
 
 let notes = [
   { id: 1, content: "HTML is easy", important: true },
@@ -66,7 +76,9 @@ app.delete("/api/notes/:id", (req, res) => {
     : res.status(204).end()
 })
 
-const PORT = 3001
+app.use(unknownPath)
+
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on PORT ${PORT}`)
 })
