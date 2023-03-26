@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react"
-import axios from "axios"
 import Note from "./components/Note"
 import noteService from "./service/Note"
 import Notification from "./components/Notification"
@@ -78,12 +77,9 @@ const App = () => {
   }
 
   const deleteNote = (id) => {
-    const url = `http://localhost:3001/api/notes/${id}`
     const note = notes.find((n) => n.id === id)
 
-    axios.delete(url, note).then(() => {
-      setNotes(notes.filter((note) => note.id !== id))
-    })
+    noteService.remove(note.id).then(setNotes(notes.filter(n => n.id !== note.id)))
   }
 
   return (

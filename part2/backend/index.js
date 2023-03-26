@@ -9,6 +9,8 @@ const unknownPath = (req, res) => {
   })
 }
 
+// used to load static files such as HTML, js, etc
+app.use(express.static('build'))
 app.use(express.json())
 app.use(morgan('tiny'))
 app.use(cors())
@@ -26,10 +28,6 @@ let notes = [
     important: true,
   },
 ]
-
-app.get("/", (req, res) => {
-  res.send("<h1>hello, world<h1/>")
-})
 
 app.get("/api/notes", (req, res) => {
   res.json(notes)
