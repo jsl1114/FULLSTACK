@@ -1,10 +1,10 @@
-# fly.toml file generated for phonebookappjason on 2023-03-26T20:52:11-04:00
+# fly.toml file generated for shy-dawn-5084 on 2023-03-26T22:20:11-04:00
 
-app = "phonebookappjason"
+app = "shy-dawn-5084"
 kill_signal = "SIGINT"
 kill_timeout = 5
 mounts = []
-primary_region = "lax"
+primary_region = "den"
 processes = []
 
 [build]

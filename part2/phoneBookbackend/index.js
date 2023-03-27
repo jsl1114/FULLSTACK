@@ -65,16 +65,29 @@ app.post("/api/persons", (req, res) => {
   res.json(newPerson)
 })
 
-app.delete(
-  ("/api/persons/:id", (req, res) => {
-    const id = Number(req.params.id)
-    const match = persons.find((p) => p.id === id)
+// app.delete(
+//   ("/api/persons/:id", (req, res) => {
+//     const id = Number(req.params.id)
+//     const match = persons.find((p) => p.id === id)
 
-    match
-      ? ((persons = persons.filter((p) => p.id !== id)), res.json(match))
-      : res.status(204).end()
-  })
-)
+//     match
+//       ? ((persons = persons.filter((p) => p.id !== id)), res.json(match))
+//       : res.status(204).end()
+//   })
+// )
+
+app.delete("/api/persons/:id", (req, res) => {
+  const id = Number(req.params.id)
+  const personToDelete = persons.find(p => p.id === id)
+
+  if (personToDelete) {
+    persons = persons.filter(p => p.id !== id)
+    res.json(personToDelete)
+  } else {
+    res.status(204).json({ err: "no person"}).end()
+  }
+})
+
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
