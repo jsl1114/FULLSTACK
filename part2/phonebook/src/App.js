@@ -18,7 +18,6 @@ const App = () => {
   const [currency, setCurrency] = useState(null)
 
   useEffect(() => {
-    console.log(`Effect run, currency is now ${currency}`)
     if (currency) {
       console.log('Fetching rates');
       axios
@@ -109,11 +108,10 @@ const App = () => {
   }
 
   const deletePerson = (id) => {
-    const name = persons.filter((person) => person.id === id)[0].name
+    const name = persons.find(p => p.id === id).name
     if (window.confirm(`Delete ${name}?`)) {
       personService
         .remove(id)
-        .then((res) => res.data)
         .then(setPersons(persons.filter((person) => person.id !== id)))
     }
   }
@@ -146,14 +144,14 @@ const App = () => {
       />
       <h2>Numbers</h2>
       <Content persons={persons} deletePerson={deletePerson} />
-      <h2>NEW FEATURE: Currency Rates</h2>
+      {/* <h2>NEW FEATURE: Currency Rates</h2>
       <form onSubmit={onCurSearch}>
         currency: <input value={newCur} onChange={handleCurChange} />
         <button type="submit">exchange rate</button>
         <pre>
           {JSON.stringify(rates, null, 2)}
         </pre>
-      </form>
+      </form> */}
     </div>
   )
 }

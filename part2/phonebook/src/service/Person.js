@@ -1,5 +1,5 @@
 import axios from 'axios'
-const baseUrl = 'https://noteappjs.fly.dev/api/persons'
+const baseUrl = '/api/persons'
 
 const getAll = () => {
   const req =  axios.get(baseUrl)
