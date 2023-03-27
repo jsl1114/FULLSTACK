@@ -1,18 +1,18 @@
 const express = require("express")
 const app = express()
-const morgan = require('morgan')
-const cors = require('cors')
+const morgan = require("morgan")
+const cors = require("cors")
 
 const unknownPath = (req, res) => {
   res.status(404).json({
-    err: 'Unknown path'
+    err: "Unknown path",
   })
 }
 
 // used to load static files such as HTML, js, etc
-app.use(express.static('build'))
+app.use(express.static("build"))
 app.use(express.json())
-app.use(morgan('tiny'))
+app.use(morgan("tiny"))
 app.use(cors())
 
 let notes = [
@@ -29,6 +29,71 @@ let notes = [
   },
 ]
 
+let persons = [
+  {
+    name: "Arto Hellas",
+    number: "040-123456",
+    id: 1,
+  },
+  {
+    name: "Ada Lovelace",
+    number: "39-44-5323523",
+    id: 2,
+  },
+  {
+    name: "Dan Abramov",
+    number: "12-43-234345",
+    id: 3,
+  },
+  {
+    name: "Mary Poppendieck",
+    number: "39-23-6423122",
+    id: 4,
+  },
+]
+
+// PHONEBOOK SERVICES
+app.get("/api/persons", (req, res) => {
+  res.json(persons)
+})
+
+const generatePersonId = () => {
+  const maxId = notes.length > 0 ? Math.max(...persons.map((n) => n.id)) : 0
+  return maxId + 1
+}
+
+app.post("/api/persons", (req, res) => {
+  const body = req.body
+
+  if (!body.content) {
+    res.status(400).json({
+      error: "content missing",
+    })
+  }
+
+  const newPerson = {
+    name: body.name,
+    number: body.number,
+    id: generatePersonId(),
+  }
+
+  persons = persons.concat(newPerson)
+
+  res.json(newPerson)
+})
+
+app.delete(
+  ("/api/persons/:id",
+  (req, res) => {
+    const id = Number(req.params.id)
+    const match = persons.find((p) => p.id === id)
+
+    match
+      ? ((persons = persons.filter((p) => p.id !== id)), res.json(match))
+      : res.status(400).json({ err: "Nonexistant" })
+  })
+)
+
 app.get("/api/notes", (req, res) => {
   res.json(notes)
 })
@@ -40,10 +105,10 @@ const generateId = () => {
 
 app.post("/api/notes", (req, res) => {
   const body = req.body
-  
+
   if (!body.content) {
     res.status(400).json({
-      error: "content missing"
+      error: "content missing",
     })
   }
 
