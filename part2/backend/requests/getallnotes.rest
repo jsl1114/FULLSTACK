@@ -1,1 +1,15 @@
-GET http://localhost:3001/api/notes
+GET http://localhost:3001/api/notes/
+
+### 
+
+DELETE http://localhost:3001/api/notes/64222cf35e0e640baebe280d
+
+###
+
+PUT http://localhost:3001/api/notes/6421e0cac3ec37eaadb250a3
+Content-Type: application/json
+
+{
+  "content": "HTML is SOOO Easy",
+  "important": true
+}

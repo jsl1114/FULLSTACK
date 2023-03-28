@@ -1,93 +1,67 @@
+require("dotenv").config()
 const express = require("express")
 const app = express()
 const morgan = require("morgan")
 const cors = require("cors")
+const Person = require("./model/person")
 
 app.use(cors())
 app.use(express.static("build"))
 app.use(express.json())
 app.use(morgan("tiny"))
 
-let persons = [
-  {
-    name: "Arto Hellas",
-    number: "040-123456",
-    id: 1,
-  },
-  {
-    name: "Ada Lovelace",
-    number: "39-44-5323523",
-    id: 2,
-  },
-  {
-    name: "Dan Abramov",
-    number: "12-43-234345",
-    id: 3,
-  },
-  {
-    name: "Mary Poppendieck",
-    number: "39-23-6423122",
-    id: 4,
-  },
-]
-
 // PHONEBOOK SERVICES
 app.get("/api/persons", (req, res) => {
-  res.json(persons)
+  Person.find({}).then((persons) => {
+    res.json(persons)
+  })
 })
 
 app.get("/api/persons/:id", (req, res) => {
-  res.json(persons.find((p) => p.id === Number(req.params.id)))
+  Person.findById(req.params.id).then((p) => {
+    res.json(p)
+  })
 })
-
-const generatePersonId = () => {
-  const maxId = persons.length > 0 ? Math.max(...persons.map((n) => n.id)) : 0
-  return maxId + 1
-}
 
 app.post("/api/persons", (req, res) => {
   const body = req.body
 
-  if (!body.number || !body.name) {
-    res.status(400).json({
-      error: "number or name missing",
-    })
+  if (body.name === undefined || body.number === undefined) {
+    res.status(400).json({ err: "content missing" }).end()
   }
 
-  const newPerson = {
+  const person = new Person({
     name: body.name,
     number: body.number,
-    id: generatePersonId(),
-  }
+  })
 
-  persons = persons.concat(newPerson)
-
-  res.json(newPerson)
+  person.save().then((p) => {
+    res.json(p)
+  })
 })
 
-// app.delete(
-//   ("/api/persons/:id", (req, res) => {
-//     const id = Number(req.params.id)
-//     const match = persons.find((p) => p.id === id)
-
-//     match
-//       ? ((persons = persons.filter((p) => p.id !== id)), res.json(match))
-//       : res.status(204).end()
-//   })
-// )
-
-app.delete("/api/persons/:id", (req, res) => {
-  const id = Number(req.params.id)
-  const personToDelete = persons.find(p => p.id === id)
-
-  if (personToDelete) {
-    persons = persons.filter(p => p.id !== id)
-    res.json(personToDelete)
-  } else {
-    res.status(204).json({ err: "no person"}).end()
-  }
+app.delete("/api/persons/:id", (req, res, next) => {
+  Person.findByIdAndRemove(req.params.id)
+    .then((p) => {
+      res.status(204).end()
+    })
+    .catch((err) => next(err))
 })
 
+app.put("/api/persons/:id", (req, res, next) => {
+  const body = req.body
+
+  const updatedPerson = {
+    name: body.name,
+    number: body.number,
+  }
+
+  Person.findByIdAndUpdate(req.params.id, updatedPerson, { new: true })
+    .then((p) => {
+      res.json(p)
+    })
+    .catch((err) => next(err))
+})
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {

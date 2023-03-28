@@ -65,6 +65,10 @@ const App = () => {
       .update(id, changedNote)
       .then((res) => {
         setNotes(notes.map((note) => (note.id !== id ? note : res.data)))
+        setSuccessMsg(`changed to ${res.data.important}`)
+        setTimeout(() => {
+          setSuccessMsg(null)
+        }, 3000);
       })
       .catch((err) => {
         setErrMsg(
@@ -79,7 +83,7 @@ const App = () => {
   const deleteNote = (id) => {
     const note = notes.find((n) => n.id === id)
 
-    noteService.remove(note.id).then(setNotes(notes.filter(n => n.id !== note.id)))
+    noteService.remove(id).then(setNotes(notes.filter(n => n.id !== note.id)))
   }
 
   return (
