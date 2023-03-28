@@ -2,22 +2,7 @@ import { useState, useEffect } from "react"
 import Note from "./components/Note"
 import noteService from "./service/Note"
 import Notification from "./components/Notification"
-
-const Footer = () => {
-  const footerStyle = { color: "purple", fontStyle: "italic", fontSize: 16 }
-  return (
-    <div style={footerStyle}>
-      <br />
-      <em>
-        Note app, Department of Computer Science,{" "}
-        <a target='_blank' href='https://nyu.edu'>
-          New York University
-        </a>{" "}
-        2023
-      </em>
-    </div>
-  )
-}
+import Footer from "./components/Footer"
 
 const App = () => {
   const [notes, setNotes] = useState([])
@@ -59,13 +44,14 @@ const App = () => {
 
   const toggleImportanceOf = (id) => {
     const note = notes.find((n) => n.id === id)
-    const changedNote = { ...note, important: !note.important }
+    const changedNot
+    e = { ...note, important: !note.important }
 
     noteService
       .update(id, changedNote)
       .then((res) => {
         setNotes(notes.map((note) => (note.id !== id ? note : res.data)))
-        setSuccessMsg(`changed to ${res.data.important}`)
+        setSuccessMsg(`changed to ${res.data.important === true ? 'imoprtant' : 'unimportant'}`)
         setTimeout(() => {
           setSuccessMsg(null)
         }, 3000);
