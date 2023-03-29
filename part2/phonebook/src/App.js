@@ -10,7 +10,7 @@ const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState("")
   const [newNumber, setNewNumber] = useState("")
-  const [newCur, setNewCur] = useState("")
+  // const [newCur, setNewCur] = useState("")
   const [success, setSuccess] = useState(false)
   const [successMsg, setsuccessMsg] = useState(null)
   const [errorMsg, setErrorMsg] = useState(null)
@@ -48,14 +48,14 @@ const App = () => {
     })
   }, [])
 
-  const handleCurChange = (e) => {
-    setNewCur(e.target.value)
-  }
+  // const handleCurChange = (e) => {
+  //   setNewCur(e.target.value)
+  // }
 
-  const onCurSearch = (e) => {
-    e.preventDefault()
-    setCurrency(newCur)
-  }
+  // const onCurSearch = (e) => {
+  //   e.preventDefault()
+  //   setCurrency(newCur)
+  // }
 
   const addNew = (e) => {
     e.preventDefault()
