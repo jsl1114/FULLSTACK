@@ -10,6 +10,21 @@ app.use(express.static("build"))
 app.use(express.json())
 app.use(morgan("tiny"))
 
+// INFO
+app.get("/info", (req, res) => {
+  const currentTime = new Date().toLocaleString()
+  Person.find({}).then((persons) => {
+    res.send(
+      `<div>
+        <p>Phonebook has info for ${persons.length} people</p>
+      </div>
+      <div>
+        <p>${currentTime}</p>
+      </div>`
+    )
+  })
+})
+
 // PHONEBOOK SERVICES
 app.get("/api/persons", (req, res) => {
   Person.find({}).then((persons) => {
@@ -17,13 +32,15 @@ app.get("/api/persons", (req, res) => {
   })
 })
 
-app.get("/api/persons/:id", (req, res) => {
-  Person.findById(req.params.id).then((p) => {
-    res.json(p)
-  })
+app.get("/api/persons/:id", (req, res, next) => {
+  Person.findById(req.params.id)
+    .then((p) => {
+      res.json(p)
+    })
+    .catch((err) => next(err))
 })
 
-app.post("/api/persons", (req, res) => {
+app.post("/api/persons", (req, res, next) => {
   const body = req.body
 
   if (body.name === undefined || body.number === undefined) {
@@ -38,6 +55,7 @@ app.post("/api/persons", (req, res) => {
   person.save().then((p) => {
     res.json(p)
   })
+  .catch(err => next(err))
 })
 
 app.delete("/api/persons/:id", (req, res, next) => {
@@ -49,19 +67,26 @@ app.delete("/api/persons/:id", (req, res, next) => {
 })
 
 app.put("/api/persons/:id", (req, res, next) => {
-  const body = req.body
+  const { name, number } = req.body
 
-  const updatedPerson = {
-    name: body.name,
-    number: body.number,
-  }
-
-  Person.findByIdAndUpdate(req.params.id, updatedPerson, { new: true })
+  Person.findByIdAndUpdate(req.params.id, { name, number }, { new: true, runValidators: true, context: 'query' })
     .then((p) => {
       res.json(p)
     })
     .catch((err) => next(err))
 })
+
+const errorHandler = (err, req, res, next) => {
+  console.error(err.message)
+
+  if (err.name === "CastError") {
+    return res.status(500).send({ error: "malformatted id" })
+  } else if (err.name === "ValidationError") {
+    return res.status(400).json({ err: err.message })
+  }
+}
+
+app.use(errorHandler)
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {

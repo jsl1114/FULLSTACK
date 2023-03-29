@@ -6,10 +6,10 @@ DELETE http://localhost:3001/api/notes/64222cf35e0e640baebe280d
 
 ###
 
-PUT http://localhost:3001/api/notes/6421e0cac3ec37eaadb250a3
+POST http://localhost:3001/api/notes
 Content-Type: application/json
 
 {
-  "content": "HTML is SOOO Easy",
+  "content": "HTMLS",
   "important": true
 }

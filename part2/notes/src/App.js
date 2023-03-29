@@ -31,7 +31,7 @@ const App = () => {
     noteService.create(noteObject).then((res) => {
       setNotes(notes.concat(res.data))
       setNewNote("")
-      setSuccessMsg(`Added note [${noteObject.content}]`)
+      setSuccessMsg(`Added note "${noteObject.content}"`)
       setTimeout(() => {
         setSuccessMsg(null)
       }, 5000)
@@ -44,8 +44,7 @@ const App = () => {
 
   const toggleImportanceOf = (id) => {
     const note = notes.find((n) => n.id === id)
-    const changedNot
-    e = { ...note, important: !note.important }
+    const changedNote = { ...note, important: !note.important }
 
     noteService
       .update(id, changedNote)
@@ -67,9 +66,20 @@ const App = () => {
   }
 
   const deleteNote = (id) => {
-    const note = notes.find((n) => n.id === id)
 
-    noteService.remove(id).then(setNotes(notes.filter(n => n.id !== note.id)))
+    noteService.remove(id).then(setNotes(notes.filter(n => n.id !== id)))
+  }
+
+  const onEditNote = (id) => {
+
+    const updatedNote = {
+      content: window.prompt('What would you like to change it to? (More than 5 chars)'),
+      important: window.confirm('Set important?') ? true : false
+    }
+
+    noteService.update(id, updatedNote).then(res => {
+      setNotes(notes.map(n => n.id === id ? res.data : n))
+    }).catch(err => window.alert('content less than 5 chars, nothing changed'))
   }
 
   return (
@@ -90,6 +100,9 @@ const App = () => {
             }}
             deleteNote={() => {
               deleteNote(note.id)
+            }}
+            onEdit={() => {
+              onEditNote(note.id)
             }}
           />
         ))}

@@ -16,21 +16,31 @@ const App = () => {
   const [errorMsg, setErrorMsg] = useState(null)
   const [rates, setRates] = useState({})
   const [currency, setCurrency] = useState(null)
+  const [searchBarVal, setSearchBarVal] = useState("")
 
   useEffect(() => {
     if (currency) {
-      console.log('Fetching rates');
+      console.log("Fetching rates")
       axios
         .get(`https://open.er-api.com/v6/latest/${currency}`)
-        .then(res => {
+        .then((res) => {
           setRates(res.data.rates)
         })
-        .catch(err => console.log('err'))
-        .finally (
-          console.log('success!')
-        )
+        .catch((err) => console.log("err"))
+        .finally(console.log("success!"))
     }
   }, [currency])
+
+  useEffect(() => {
+    if (searchBarVal !== "") {
+      personService.getAll().then((res) => {
+        const result = res.filter((person) =>
+          person.name.toLowerCase().includes(searchBarVal.toLowerCase())
+        )
+        setPersons(result)
+      })
+    }
+  }, [searchBarVal])
 
   useEffect(() => {
     personService.getAll().then((init) => {
@@ -47,19 +57,17 @@ const App = () => {
     setCurrency(newCur)
   }
 
-  let i = 5
   const addNew = (e) => {
     e.preventDefault()
     const newPerson = {
       name: newName,
       number: newNumber,
-      id: i++,
+      id: null,
     }
     const checkDuplicate =
-      persons.filter((person) => person.name === newName).length !== 0
-    const personToModify = persons.filter(
-      (person) => person.name === newPerson.name
-    )[0]
+      persons.find(p => p.name === newName)
+    const personToModify = 
+      persons.find(p => p.name === newName)
 
     if (checkDuplicate) {
       if (
@@ -69,11 +77,12 @@ const App = () => {
       ) {
         personService
           .update(personToModify.id, newPerson)
-          .then(
-            setSuccess(true),
+          .then( res => {
+            setSuccess(true)
             setPersons(
-              persons.map((p) => (p.id === personToModify.id ? newPerson : p))
+              persons.map((p) => (p.id === personToModify.id ? res.data : p))
             )
+          }
           )
           .catch((e) => {
             setSuccess(false)
@@ -97,18 +106,26 @@ const App = () => {
           })
       }
     } else {
-      personService.create(newPerson).then(
-        setPersons(persons.concat(newPerson)),
-        setsuccessMsg(`${newPerson.name}'s number is now added`),
-        setTimeout(() => {
-          setsuccessMsg(null)
-        }, 3000)
-      )
+      personService
+        .create(newPerson)
+        .then(res => {
+          setPersons(persons.concat(res.data))
+          setsuccessMsg(`${res.data.name}'s number is now added`)
+          setTimeout(() => {
+            setsuccessMsg(null)
+          }, 3000)
+        })
+        .catch((error) => {
+          setErrorMsg(error.response.data.err)
+          setTimeout(() => {
+            setErrorMsg(null)
+          }, 4000)
+        })
     }
   }
 
   const deletePerson = (id) => {
-    const name = persons.find(p => p.id === id).name
+    const name = persons.find((p) => p.id === id).name
     if (window.confirm(`Delete ${name}?`)) {
       personService
         .remove(id)
@@ -125,10 +142,8 @@ const App = () => {
   }
 
   const handleSearch = (e) => {
-    const result = persons.filter((person) => {
-      return person.name.toLowerCase().includes(e.target.value.toLowerCase())
-    })
-    setPersons(result)
+    e.preventDefault()
+    setSearchBarVal(e.target.value)
   }
 
   return (

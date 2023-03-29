@@ -4,7 +4,7 @@ const AddNew = ({handleNameChange, handleNumberChange, addNew}) => {
       <h2>Add a new person</h2>
       <form onSubmit={addNew}>
         <div>
-          name: <input onChange={handleNameChange} placeholder='JGod' />
+          name: <input onChange={handleNameChange} />
         </div>
         <div>
           number: <input onChange={handleNumberChange} />
