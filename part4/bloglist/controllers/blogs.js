@@ -10,10 +10,12 @@ blogsRouter.get('/', (request, response) => {
 blogsRouter.post('/', (request, response, next) => {
   const blog = new Blog(request.body)
 
-  blog.save().then((result) => {
-    response.status(201).json(result)
-  })
-  .catch(err => next(err))
+  blog
+    .save()
+    .then((result) => {
+      response.status(201).json(result)
+    })
+    .catch((err) => next(err))
 })
 
 blogsRouter.delete('/:id', (req, res, next) => {
@@ -24,12 +26,18 @@ blogsRouter.delete('/:id', (req, res, next) => {
     .catch((err) => next(err))
 })
 
-// blogsRouter.put(`/:id`, (req, res, next) => {
-//   const body = req.body
+blogsRouter.put(`/:id`, (req, res, next) => {
+  const {title, author, url, likes} = req.body
 
-//   const updatedBlog = {
-
-//   }
-// })
+  Blog.findByIdAndUpdate(
+    req.params.id,
+    { title, author, url, likes },
+    { new: true, runValidators: true, context: 'query' }
+  )
+    .then((updatedBlog) => {
+      res.json(updatedBlog)
+    })
+    .catch((err) => next(err))
+})
 
 module.exports = blogsRouter

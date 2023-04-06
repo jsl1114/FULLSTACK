@@ -1,14 +1,11 @@
 import { AiOutlineLike, AiOutlineDelete } from 'react-icons/ai'
-import { useState } from 'react'
 
-const Blog = ({ title, author, url, handleDelete }) => {
-  const [likes, setLikes] = useState(0)
-
+const Blog = ({ title, author, url, handleDelete, likes, handleLike }) => {
   return (
     <div className='singleblog'>
       <AiOutlineDelete
         className='deletebtn'
-        size={20}
+        size={25}
         onClick={handleDelete}
       />
       <h3>{title}</h3>
@@ -21,15 +18,12 @@ const Blog = ({ title, author, url, handleDelete }) => {
         <button className='viewbtn'>View</button>
       </a>
       <hr color='cornsilk' />
-      <button
-        onClick={() => {
-          setLikes(likes + 1)
-        }}
+      <AiOutlineLike
+        size={20}
+        onClick={handleLike}
         className='likebtn'
-      >
-        <AiOutlineLike size={20} />
-      </button>
-      {likes !== 0 && <div>{likes}</div>}
+      />
+      <div>{likes}</div>
     </div>
   )
 }
