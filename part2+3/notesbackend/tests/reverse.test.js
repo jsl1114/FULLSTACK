@@ -1,19 +1,21 @@
-const reverse = require('../utils/for_testing').reverse
+const { reverse } = require('../utils/for_testing')
 
-test('reverse of a', () => {
-  const ans = reverse('a')
+describe('reverse', () => {
+  test('of a', () => {
+    const ans = reverse('a')
 
-  expect(ans).toBe('a')
-})
+    expect(ans).toBe('a')
+  })
 
-test('reverse of a', () => {
-  const ans = reverse('react')
+  test('of react', () => {
+    const ans = reverse('react')
 
-  expect(ans).toBe('tcaer')
-})
+    expect(ans).toBe('tcaer')
+  })
 
-test('reverse of releveler', () => {
-  const ans = reverse('releveler')
+  test('of releveler', () => {
+    const ans = reverse('releveler')
 
-  expect(ans).toBe('releveler')
+    expect(ans).toBe('releveler')
+  })
 })

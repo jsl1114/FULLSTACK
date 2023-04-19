@@ -29,6 +29,6 @@
     "nodemon": "^2.0.22"
   },
   "jest": {
-    "testEnviroment": "node"
+    "testEnvironment": "node"
   }
 }
