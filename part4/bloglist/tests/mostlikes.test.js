@@ -1,6 +1,6 @@
 const listHelper = require('../utils/list_helper')
 
-describe('Most liked blog', () => {
+describe('Author with most likes', () => {
   test('of a empty list should be undefined', () => {
     expect(listHelper.favBlog([])).toEqual(undefined)
   })

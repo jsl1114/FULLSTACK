@@ -46,16 +46,14 @@ const mostBlogs = (blogs) => {
 
 const mostLikes = (blogs) => {
   let mostLiked = { likes: 0 }
-  const authors = blogs.map(({ author }) => ({ author: author, likes: 0 }))
+  const authors = blogs.map(({ author, likes }) => ({ author: author, likes: likes }))
   let temp = []
   authors.forEach((b) => {
-    const objIndex = temp.findIndex((i) => {
-      i.author = b.author
-    })
+    const objIndex = temp.findIndex((i) => (i.author === b.author))
     if (objIndex !== -1) {
       temp[objIndex].likes += b.likes
     } else {
-      temp.concat(b)
+      temp.push(b)
     }
   })
   return blogs.length === 0
