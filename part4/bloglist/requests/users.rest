@@ -1,0 +1,37 @@
+POST http://localhost:3001/api/users
+Content-Type: application/json
+
+{
+  "username":"ljsadmin2",
+  "name":"Jason Liu",
+  "password":"ljsss"
+}
+
+###
+GET http://localhost:3001/api/users
+
+###cccccccccc  
+DELETE http://localhost:3001/api/blogs/644f30b91acb6d8ac84f638f
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imxqc2FkbWluMiIsImlkIjoiNjQ0ZjE4YWFhYTkyYjI0N2E4N2U2Zjc4IiwiaWF0IjoxNjgyOTA5OTM4LCJleHAiOjE2ODI5MTM1Mzh9.T4-Fn62gzEQja1jsGFhQA_z_lWL2CRoda1WTwSMmTx8
+
+###
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imxqc2FkbWluMiIsImlkIjoiNjQ0ZjE4YWFhYTkyYjI0N2E4N2U2Zjc4IiwiaWF0IjoxNjgyOTA5OTM4LCJleHAiOjE2ODI5MTM1Mzh9.T4-Fn62gzEQja1jsGFhQA_z_lWL2CRoda1WTwSMmTx8
+
+{
+  "title": "test12344",
+  "author": "Jason GOD!",
+  "url": "nima.com",
+  "userId":"644f18aaaa92b247a87e6f78"
+}
+
+###
+POST http://localhost:3001/api/login
+Content-Type: application/json
+
+{
+  "username":"ljsadmin2",
+  "name":"Jason Liu",
+  "password":"ljsss"
+}

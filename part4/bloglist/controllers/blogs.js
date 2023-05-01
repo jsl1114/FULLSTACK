@@ -1,42 +1,55 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
+const User = require('../models/user')
+const jwt = require('jsonwebtoken')
+const { userExtractor } = require('../utils/middleware')
 
 blogsRouter.get('/', async (request, response) => {
-  const blogs = await Blog.find({})
+  const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
   response.json(blogs)
 })
 
-blogsRouter.post('/', async (request, response, next) => {
-  const blog = new Blog(request.body)
+blogsRouter.post('/', userExtractor, async (request, response) => {
+  const body = request.body
 
-  if (!request.body.title || !request.body.url) {
-    response.status(400).end()
-  } else {
-    const savedBlog = await blog.save()
-    response.status(201).json(savedBlog)
-  }
+  const user = request.user
+
+  const blog = new Blog({
+    title: body.title,
+    author: body.author,
+    url: body.url,
+    user: user.id || null,
+  })
+
+  const savedBlog = await blog.save()
+  user.blogs = user.blogs.concat(savedBlog._id)
+  await user.save()
+
+  response.json(savedBlog.toJSON())
 })
 
-blogsRouter.delete('/:id', (req, res, next) => {
-  Blog.findByIdAndRemove(req.params.id)
-    .then(() => {
-      res.status(204).end()
-    })
-    .catch((err) => next(err))
+blogsRouter.delete('/all', async (req, res) => {
+  await Blog.deleteMany({})
+  res.json({ msg: 'cleared' })
 })
 
-blogsRouter.put(`/:id`, (req, res, next) => {
+blogsRouter.delete('/:id', userExtractor, async (req, res) => {
+  const user = req.user
+  const removedBlog = await Blog.findByIdAndRemove(req.params.id)
+  user.blogs = user.blogs.filter((b) => (b.id === removedBlog.id ? {} : b))
+  await user.save()
+  res.status(204).end()
+})
+
+blogsRouter.put(`/:id`, async (req, res) => {
   const { title, author, url, likes } = req.body
 
-  Blog.findByIdAndUpdate(
+  const updatedBlog = await Blog.findByIdAndUpdate(
     req.params.id,
     { title, author, url, likes },
     { new: true, runValidators: true, context: 'query' }
   )
-    .then((updatedBlog) => {
-      res.json(updatedBlog)
-    })
-    .catch((err) => next(err))
+  res.json(updatedBlog)
 })
 
 module.exports = blogsRouter

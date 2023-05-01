@@ -1,21 +1,41 @@
 const notesRouter = require('express').Router()
 const Note = require('../models/note')
+const User = require('../models/users')
+const jwt = require('jsonwebtoken')
 
 notesRouter.get('/', async (req, res) => {
   const notes = await Note.find({})
   res.json(notes)
 })
 
+const getTokenFrom = (req) => {
+  const auth = req.get('Authorization')
+  if (auth && auth.startsWith('Bearer ')) {
+    return auth.replace('Bearer ', '')
+  }
+  return null
+}
+
 notesRouter.post('/', async (req, res) => {
   const body = req.body
 
+  const decodedToken = jwt.verify(getTokenFrom(req), process.env.SECRET)
+  if (!decodedToken.id) {
+    return res.status(401).json({ error: 'invalid token' })
+  }
+
+  const user = await User.findById(decodedToken.id)
+
   const note = new Note({
     content: body.content,
-    imoprtant: body.important || false,
+    important: body.important || false,
+    user: user.id,
   })
 
   // Don't need try-catch anymore due to express-async-error dependency
   const savedNote = await note.save()
+  user.notes = user.notes.concat(savedNote._id)
+  await user.save()
   res.status(201).json(savedNote)
 })
 

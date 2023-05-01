@@ -8,6 +8,8 @@ const mongoose = require('mongoose')
 const express = require('express')
 const app = express()
 const blogsRouter = require('./controllers/blogs')
+const userRouter = require('./controllers/users')
+const loginRouter = require('./controllers/login')
 
 mongoose.set('strictQuery', false)
 
@@ -27,7 +29,11 @@ app.use(express.static('build'))
 app.use(express.json())
 app.use(morgan('tiny'))
 
+app.use(middleware.tokenExtractor)
+
 app.use('/api/blogs', blogsRouter)
+app.use('/api/users', userRouter)
+app.use('/api/login', loginRouter)
 
 app.use(middleware.unknownEndPoint)
 app.use(middleware.errorHandler)

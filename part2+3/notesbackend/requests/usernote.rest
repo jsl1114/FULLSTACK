@@ -1,0 +1,43 @@
+POST http://localhost:3001/api/users
+Content-Type: application/json
+
+{
+  "username": "jsl1114",
+  "name": "Jason Liu",
+  "password": "jason1114"
+}
+
+###
+POST http://localhost:3001/api/login
+Content-Type: application/json
+
+{
+  "username":"jsl1114",
+  "password":"jason1114"
+}
+
+###
+POST http://localhost:3001/api/notes
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpzbDExMTQiLCJpZCI6IjY0NGViNTQxYWI5NTY4ZGI4NGU1M2ZkNSIsImlhdCI6MTY4Mjg4OTA2OCwiZXhwIjoxNjgyODg5MTA0fQ.EbfcVJ5U7eq-Owj0-9A_SjviYE4u8rtM5E2207H6h3g
+
+{
+  "content":"this 2nd post passed the 30 ish s token test",
+  "important":true
+}
+
+### 
+GET http://localhost:3001/api/users
+
+###
+POST http://localhost:3001/api/notes
+Content-Type: application/json
+
+{
+  "content":"The TRUE ONE",
+  "important": true,
+  "userId":"644eb541ab9568db84e53fd5"
+}
+
+###
+DELETE http://localhost:3001/api/users/644b2cd5b265201d56eebe8f
