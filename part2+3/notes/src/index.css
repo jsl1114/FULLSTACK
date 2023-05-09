@@ -47,6 +47,7 @@ button {
     font-size: 15px;
     padding: 10px 20px;
     transition-duration: 0.3s;
+    margin-top: 10px;
 }
 
 button:hover {
@@ -58,9 +59,13 @@ button:hover {
 
 input {
     padding: 10px 20px;
-    height: 20px;
+    margin-top: 10px;
+    height: 15px;
+    background-color: antiquewhite;
+    border: 2px solid;
+    border-color: blueviolet;
 }
 
-input:active {
-    border: none;
+input:focus-within {
+    border-radius: 5px;
 }

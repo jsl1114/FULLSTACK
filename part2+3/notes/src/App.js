@@ -17,7 +17,10 @@ const App = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault()
-
+    setErrMsg(`Logging in with ${username}, ${password}`)
+    setTimeout(() => {
+      setErrMsg(null)
+    }, 3000)
     try {
       const user = await loginService.login({ username, password })
       window.localStorage.setItem('loggedNoteappUser', JSON.stringify(user))
@@ -124,6 +127,7 @@ const App = () => {
           type='text'
           value={username}
           onChange={({ target }) => setUsername(target.value)}
+          placeholder='enter your username'
         />
       </div>
       <div>
@@ -132,6 +136,7 @@ const App = () => {
           type='password'
           value={password}
           onChange={({ target }) => setPassword(target.value)}
+          placeholder='enter your password'
         />
       </div>
       <button type='submit'>Login</button>

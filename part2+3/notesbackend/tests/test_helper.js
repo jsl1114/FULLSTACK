@@ -6,6 +6,12 @@ const initialNotes = [
   { content: 'Browser can execute only JavaScript', important: true },
 ]
 
+const testingCredentials = {
+  username: 'jsl1114',
+  name: 'Jason Liu',
+  password: 'jason1114',
+}
+
 const nonExistId = async () => {
   const note = new Note({ content: 'willremovethissoon' })
   await note.save()
@@ -21,11 +27,12 @@ const noteInDb = async () => {
 
 const usersInDb = async () => {
   const users = await User.find({})
-  return users.map(user => user.toJSON())
+  return users.map((user) => user.toJSON())
 }
 
 module.exports = {
   initialNotes,
+  testingCredentials,
   nonExistId,
   noteInDb,
   usersInDb,

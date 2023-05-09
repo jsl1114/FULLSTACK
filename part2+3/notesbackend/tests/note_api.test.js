@@ -11,18 +11,19 @@ const Note = require('../models/note')
 beforeEach(async () => {
   await Note.deleteMany({})
   console.log('cleared')
+  const user = await api.post('/api/login').send(helper.testingCredentials)
 
-  // the for-of block garantees a specific execution order
-  for (let note of helper.initialNotes) {
-    let noteObj = new Note(note)
-    await noteObj.save()
-    console.log(
-      `Saved note ${note.content.split(' ')[0]} ${
-        note.content.split(' ')[1]
-      }...`
-    )
+  if (user) {
+    for (let note of helper.initialNotes) {
+      let noteObj = new Note(note)
+      await noteObj.save()
+      console.log(
+        `Saved note ${note.content.split(' ')[0]} ${
+          note.content.split(' ')[1]
+        }...`
+      )
+    }
   }
-  console.log('done')
 })
 
 describe('GET', () => {
