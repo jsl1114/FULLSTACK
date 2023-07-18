@@ -14,6 +14,7 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+  const [loggedIn, setLoggedIn] = useState(false)
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -32,8 +33,18 @@ const App = () => {
       setErrMsg('Wrong Credentials')
       setTimeout(() => {
         setErrMsg(null)
-      }, 5000)
+      }, 3000)
     }
+  }
+
+  const handleLogout = async (event) => {
+    event.preventDefault()
+    setSuccessMsg('Logging out')
+    setTimeout(() => {
+      setSuccessMsg(null)
+      setLoggedIn(false)
+      window.localStorage.removeItem('loggedNotesappUser')
+    }, 2000);
   }
 
   useEffect(() => {
@@ -79,8 +90,7 @@ const App = () => {
       .then((res) => {
         setNotes(notes.map((note) => (note.id !== id ? note : res.data)))
         setSuccessMsg(
-          `changed to ${
-            res.data.important === true ? 'imoprtant' : 'unimportant'
+          `changed to ${res.data.important === true ? 'imoprtant' : 'unimportant'
           }`
         )
         setTimeout(() => {
@@ -122,7 +132,6 @@ const App = () => {
   const loginForm = () => (
     <form onSubmit={handleLogin}>
       <div>
-        Username
         <input
           type='text'
           value={username}
@@ -131,7 +140,6 @@ const App = () => {
         />
       </div>
       <div>
-        Password
         <input
           type='password'
           value={password}
@@ -154,7 +162,7 @@ const App = () => {
   )
 
   return (
-    <div>
+    <div className='content'>
       <h1>Notes</h1>
       <Notification
         type='error'
@@ -168,14 +176,14 @@ const App = () => {
       {!user && loginForm()}
       {user && (
         <div>
-          <p>${user.name} logged in</p>
+          <p>{user.name} logged in</p>
           {noteForm()}
         </div>
       )}
 
-      <div onClick={() => setShowAll(!showAll)}>
+      {loggedIn ? (<div onClick={() => setShowAll(!showAll)}>
         <button>Show {showAll ? 'important' : 'all'}</button>
-      </div>
+      </div>) : (<></>)}
       <ul>
         {notesToShow.map((note) => (
           <Note
