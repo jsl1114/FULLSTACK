@@ -18,8 +18,7 @@ beforeEach(async () => {
       let noteObj = new Note(note)
       await noteObj.save()
       console.log(
-        `Saved note ${note.content.split(' ')[0]} ${
-          note.content.split(' ')[1]
+        `Saved note ${note.content.split(' ')[0]} ${note.content.split(' ')[1]
         }...`
       )
     }

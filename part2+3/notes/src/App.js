@@ -16,6 +16,10 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [loggedIn, setLoggedIn] = useState(false)
 
+  useEffect(() => {
+    noteService.getAll().then(init => setNotes(init))
+  }, [])
+
   const handleLogin = async (event) => {
     event.preventDefault()
     setErrMsg(`Logging in with ${username}, ${password}`)
@@ -111,23 +115,23 @@ const App = () => {
     noteService.remove(id).then(setNotes(notes.filter((n) => n.id !== id)))
   }
 
-  const onEditNote = (id) => {
-    const updatedNote = {
-      content: window.prompt(
-        'What would you like to change it to? (More than 5 chars)'
-      ),
-      important: window.confirm('Set important?') ? true : false,
-    }
+  // const onEditNote = (id) => {
+  //   const updatedNote = {
+  //     content: window.prompt(
+  //       'What would you like to change it to? (More than 5 chars)'
+  //     ),
+  //     important: window.confirm('Set important?') ? true : false,
+  //   }
 
-    noteService
-      .update(id, updatedNote)
-      .then((res) => {
-        setNotes(notes.map((n) => (n.id === id ? res.data : n)))
-      })
-      .catch((err) =>
-        window.alert('content less than 5 chars, nothing changed')
-      )
-  }
+  //   noteService
+  //     .update(id, updatedNote)
+  //     .then((res) => {
+  //       setNotes(notes.map((n) => (n.id === id ? res.data : n)))
+  //     })
+  //     .catch((err) =>
+  //       window.alert('content less than 5 chars, nothing changed')
+  //     )
+  // }
 
   const loginForm = () => (
     <form onSubmit={handleLogin}>
@@ -161,6 +165,48 @@ const App = () => {
     </form>
   )
 
+  if (user) {
+    return (
+      <div className='content'>
+        <h1>Notes</h1>
+        <Notification
+          type='error'
+          msg={errMsg}
+        />
+        <Notification
+          type='success'
+          msg={successMsg}
+        />
+
+        {user && (
+          <div>
+            <p>{user.name} logged in <button type="button" onClick={() => {
+              window.localStorage.clear()
+              window.location.reload()
+            }}>logout</button></p>
+            {noteForm()}
+          </div>
+        )}
+
+        <button onClick={() => setShowAll(!showAll)}>Show {showAll ? 'important' : 'all'}</button>
+
+        <ul>
+          {notesToShow.map(note => (
+            <Note
+              key={note.id}
+              note={note}
+              toggleImportance={() => {
+                toggleImportanceOf(note.id)
+              }}
+            />
+          ))}
+        </ul>
+
+        <Footer />
+      </div>
+    )
+  }
+
   return (
     <div className='content'>
       <h1>Notes</h1>
@@ -172,37 +218,11 @@ const App = () => {
         type='success'
         msg={successMsg}
       />
+      {loginForm()}
 
-      {!user && loginForm()}
-      {user && (
-        <div>
-          <p>{user.name} logged in</p>
-          {noteForm()}
-        </div>
-      )}
-
-      {loggedIn ? (<div onClick={() => setShowAll(!showAll)}>
-        <button>Show {showAll ? 'important' : 'all'}</button>
-      </div>) : (<></>)}
-      <ul>
-        {notesToShow.map((note) => (
-          <Note
-            key={note.id}
-            note={note}
-            toggleImportance={() => {
-              toggleImportanceOf(note.id)
-            }}
-            deleteNote={() => {
-              deleteNote(note.id)
-            }}
-            onEdit={() => {
-              onEditNote(note.id)
-            }}
-          />
-        ))}
-      </ul>
       <Footer />
     </div>
+
   )
 }
 
