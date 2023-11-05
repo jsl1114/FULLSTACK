@@ -3,7 +3,10 @@ body {
 }
 
 html {
-  background-color:cornsilk
+  /* background-image: url('../assets/bg.png');
+  background-size: cover;
+  background-position: center; */
+  background-color: cornsilk;
 }
 
 div {
@@ -12,10 +15,21 @@ div {
 h4 {
   color: gray;
 }
+
 input {
   border: none;
   width: 30%;
   height: 35px;
+  border-bottom: 5px;
+}
+
+.logoutbtn {
+  border: none;
+}
+
+.logoutbtn:hover {
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .viewbtn {
@@ -30,13 +44,14 @@ input {
 
 .viewbtn:hover {
   cursor: pointer;
-  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
+    0 17px 50px 0 rgba(0, 0, 0, 0.19);
   background-color: rgb(54, 36, 9);
 }
 
 .deletebtn {
-  margin-bottom: 250px;
-  margin-left: 555px;
+  top: 10px;
+  right: 5px;
   position: absolute;
   color: red;
 }
@@ -69,7 +84,7 @@ input {
 }
 
 .blogformprop {
-  justify-content:center;
+  justify-content: center;
   align-items: center;
   display: flex;
   flex-direction: column;
@@ -83,20 +98,20 @@ input {
 .blogs {
   border: 2px solid;
   margin-top: 10px;
-
 }
 
 .singleblog {
-  border: 2px dashed;
+  position: relative;
+  border: 2px solid rgb(66, 60, 52);
   border-radius: 10px;
   display: inline-flex;
   flex-direction: column;
-  align-items:center;
-  justify-content: center;
+  align-items: center;
+  justify-content: start;
   padding: 7px 13px;
   margin: 10px 25px;
-  width: 630px;
   height: 300px;
+  width: 700px;
 }
 
 a button {
@@ -106,4 +121,10 @@ a button {
 
 a button:hover {
   color: rgb(218, 177, 149);
+}
+
+.postperson {
+  position: absolute;
+  bottom: 3px;
+  left: 3px;
 }

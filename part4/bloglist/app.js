@@ -1,5 +1,5 @@
 const config = require('./utils/config')
-const { info, error } = require('./utils/logger')
+const { info } = require('./utils/logger')
 const middleware = require('./utils/middleware')
 require('express-async-errors')
 const cors = require('cors')

@@ -1,38 +1,37 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Note from './components/Note'
 import noteService from './service/Note'
 import loginService from './service/Login'
 import Notification from './components/Notification'
 import Footer from './components/Footer'
+import LoginForm from './components/LoginForm'
+import NoteForm from './components/NoteForm'
+import Toggleable from './components/Toggleable'
 
 const App = () => {
   const [notes, setNotes] = useState([])
-  const [newNote, setNewNote] = useState('')
   const [showAll, setShowAll] = useState(true)
   const [errMsg, setErrMsg] = useState(null)
   const [successMsg, setSuccessMsg] = useState(null)
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [loggedIn, setLoggedIn] = useState(false)
 
+  const noteFormRef = useRef()
+
   useEffect(() => {
-    noteService.getAll().then(init => setNotes(init))
+    noteService.getAll().then((init) => setNotes(init))
   }, [])
 
-  const handleLogin = async (event) => {
-    event.preventDefault()
-    setErrMsg(`Logging in with ${username}, ${password}`)
+  const handleLogin = async (loginObj) => {
+    setErrMsg(`Logging in with ${loginObj.username}, ${loginObj.password}`)
     setTimeout(() => {
       setErrMsg(null)
     }, 3000)
     try {
-      const user = await loginService.login({ username, password })
+      const user = await loginService.login(loginObj)
       window.localStorage.setItem('loggedNoteappUser', JSON.stringify(user))
       noteService.setToken(user.token)
       setUser(user)
-      setUsername('')
-      setPassword('')
     } catch (exception) {
       setErrMsg('Wrong Credentials')
       setTimeout(() => {
@@ -41,14 +40,14 @@ const App = () => {
     }
   }
 
-  const handleLogout = async (event) => {
+  const handleLogout = (event) => {
     event.preventDefault()
     setSuccessMsg('Logging out')
     setTimeout(() => {
       setSuccessMsg(null)
       setLoggedIn(false)
       window.localStorage.removeItem('loggedNotesappUser')
-    }, 2000);
+    }, 2000)
   }
 
   useEffect(() => {
@@ -63,26 +62,15 @@ const App = () => {
 
   const notesToShow = showAll ? notes : notes.filter((note) => note.important)
 
-  const addNote = (e) => {
-    e.preventDefault()
-    const noteObject = {
-      content: newNote,
-      important: Math.random() > 0.5,
-      id: notes.length + 1,
-    }
-
+  const addNote = (noteObject) => {
+    noteFormRef.current.toggleVisibility()
     noteService.create(noteObject).then((res) => {
       setNotes(notes.concat(res.data))
-      setNewNote('')
       setSuccessMsg(`Added note "${noteObject.content}"`)
       setTimeout(() => {
         setSuccessMsg(null)
       }, 5000)
     })
-  }
-
-  const handleNoteChange = (event) => {
-    setNewNote(event.target.value)
   }
 
   const toggleImportanceOf = (id) => {
@@ -94,7 +82,8 @@ const App = () => {
       .then((res) => {
         setNotes(notes.map((note) => (note.id !== id ? note : res.data)))
         setSuccessMsg(
-          `changed to ${res.data.important === true ? 'imoprtant' : 'unimportant'
+          `changed to ${
+            res.data.important === true ? 'imoprtant' : 'unimportant'
           }`
         )
         setTimeout(() => {
@@ -133,38 +122,6 @@ const App = () => {
   //     )
   // }
 
-  const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <div>
-        <input
-          type='text'
-          value={username}
-          onChange={({ target }) => setUsername(target.value)}
-          placeholder='enter your username'
-        />
-      </div>
-      <div>
-        <input
-          type='password'
-          value={password}
-          onChange={({ target }) => setPassword(target.value)}
-          placeholder='enter your password'
-        />
-      </div>
-      <button type='submit'>Login</button>
-    </form>
-  )
-
-  const noteForm = () => (
-    <form onSubmit={addNote}>
-      <input
-        onChange={handleNoteChange}
-        placeholder='Add a new note'
-      />
-      <button type='submit'>Save</button>
-    </form>
-  )
-
   if (user) {
     return (
       <div className='content'>
@@ -180,18 +137,33 @@ const App = () => {
 
         {user && (
           <div>
-            <p>{user.name} logged in <button type="button" onClick={() => {
-              window.localStorage.clear()
-              window.location.reload()
-            }}>logout</button></p>
-            {noteForm()}
+            <p>
+              {user.name} logged in
+              <button
+                type='button'
+                onClick={() => {
+                  window.localStorage.clear()
+                  window.location.reload()
+                }}
+              >
+                logout
+              </button>
+            </p>
+            <Toggleable>
+              <NoteForm
+                createNote={addNote}
+                ref={noteFormRef}
+              />
+            </Toggleable>
           </div>
         )}
 
-        <button onClick={() => setShowAll(!showAll)}>Show {showAll ? 'important' : 'all'}</button>
+        <button onClick={() => setShowAll(!showAll)}>
+          Show {showAll ? 'important' : 'all'}
+        </button>
 
         <ul>
-          {notesToShow.map(note => (
+          {notesToShow.map((note) => (
             <Note
               key={note.id}
               note={note}
@@ -218,11 +190,11 @@ const App = () => {
         type='success'
         msg={successMsg}
       />
-      {loginForm()}
-
+      <Toggleable>
+        <LoginForm handleSubmit={handleLogin} />
+      </Toggleable>
       <Footer />
     </div>
-
   )
 }
 

@@ -1,6 +1,5 @@
 const userRouter = require('express').Router()
 const User = require('../models/user')
-const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 
 userRouter.post('/', async (req, res) => {
@@ -9,9 +8,8 @@ userRouter.post('/', async (req, res) => {
   if (password.length < 3) {
     res.status(400).json({ error: 'password length must be > 3' })
   }
-  
   const saltRounds = 10
-  const passwordHash = await bcrypt.hash(password,saltRounds)
+  const passwordHash = await bcrypt.hash(password, saltRounds)
 
   const user = new User({
     username,
@@ -19,7 +17,7 @@ userRouter.post('/', async (req, res) => {
     passwordHash,
   })
 
-  const savedUser= await user.save()
+  const savedUser = await user.save()
   res.json(savedUser)
 })
 
@@ -29,9 +27,9 @@ userRouter.get('/', async (req, res) => {
   res.json(users)
 })
 
-userRouter.delete('/all', async (req,res) => {
+userRouter.delete('/all', async (req, res) => {
   await User.deleteMany({})
-  res.json({msg: "cleared"})
+  res.json({ msg: "cleared" })
 })
 
 module.exports = userRouter

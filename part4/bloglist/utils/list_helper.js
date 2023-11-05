@@ -1,7 +1,3 @@
-const dummy = (blogs) => {
-  return 1
-}
-
 const totalLikes = (blogs) => {
   const reducer = (sum, likes) => {
     return sum + likes
@@ -38,10 +34,10 @@ const mostBlogs = (blogs) => {
   return blogs.length === 0
     ? undefined
     : temp.reduce((ans, blog) => {
-        ans = blog.blogs > mostBlogscnt.blogs ? blog : mostBlogscnt
-        mostBlogscnt = ans
-        return ans
-      }, 0)
+      ans = blog.blogs > mostBlogscnt.blogs ? blog : mostBlogscnt
+      mostBlogscnt = ans
+      return ans
+    }, 0)
 }
 
 const mostLikes = (blogs) => {
@@ -59,14 +55,13 @@ const mostLikes = (blogs) => {
   return blogs.length === 0
     ? undefined
     : temp.reduce((ans, blog) => {
-        ans = blog.likes >= mostLiked.likes ? blog : mostLiked
-        mostLiked = ans
-        return ans
-      }, 0)
+      ans = blog.likes >= mostLiked.likes ? blog : mostLiked
+      mostLiked = ans
+      return ans
+    }, 0)
 }
 
 module.exports = {
-  dummy,
   totalLikes,
   favBlog,
   mostBlogs,

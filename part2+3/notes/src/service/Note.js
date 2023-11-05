@@ -14,12 +14,12 @@ const getAll = () => {
   })
 }
 
-const create = async (newObject) => {
+const create = (newObject) => {
   const config = {
     headers: { Authorization: token },
   }
-  const res = await axios.post(baseUrl, newObject, config)
-  return res.data
+  const request = axios.post(baseUrl, newObject, config)
+  return request.then((response) => response.data)
 }
 
 const update = (id, newObject) => {
@@ -35,7 +35,7 @@ const exportedObj = {
   create,
   update,
   remove,
-  setToken
+  setToken,
 }
 
 export default exportedObj
