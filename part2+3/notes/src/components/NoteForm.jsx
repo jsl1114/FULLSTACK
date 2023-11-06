@@ -3,26 +3,26 @@ import { useState } from 'react'
 const NoteForm = ({ createNote }) => {
   const [newNote, setNewNote] = useState('')
 
-  const addNote = (e) => {
-    e.preventDefault()
-    const noteObject = {
+  const addNote = (event) => {
+    event.preventDefault()
+    createNote({
       content: newNote,
-      important: Math.random() > 0.5,
-    }
-    createNote(noteObject)
+      important: true
+    })
 
     setNewNote('')
   }
 
   return (
-    <div className='formDiv'>
+    <div>
+      <h2>Create a new note</h2>
+
       <form onSubmit={addNote}>
         <input
-          onChange={(e) => setNewNote(e.target.value)}
-          placeholder='Add a new note'
           value={newNote}
+          onChange={event => setNewNote(event.target.value)}
         />
-        <button type='submit'>Save</button>
+        <button type="submit">save</button>
       </form>
     </div>
   )

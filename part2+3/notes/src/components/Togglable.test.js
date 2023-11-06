@@ -2,31 +2,33 @@ import React from 'react'
 import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import Toggleable from './Toggleable'
+import Togglable from './Togglable'
 
 describe('<Togglable />', () => {
   let container
 
   beforeEach(() => {
     container = render(
-      <Toggleable buttonLabel='show'>
-        <div className='testDiv'>test content</div>
-      </Toggleable>
+      <Togglable buttonLabel="show...">
+        <div className="testDiv" >
+          togglable content
+        </div>
+      </Togglable>
     ).container
   })
 
-  test('should render its children', async () => {
-    await screen.findAllByText('test content')
+  test('renders its children', () => {
+    screen.getByText('togglable content')
   })
 
-  test('At start the children are not dispalyed', () => {
+  test('at start the children are not displayed', () => {
     const div = container.querySelector('.togglableContent')
-    expect(div).toHaveStyle('display : none')
+    expect(div).toHaveStyle('display: none')
   })
 
   test('after clicking the button, children are displayed', async () => {
     const user = userEvent.setup()
-    const button = screen.getByText('show')
+    const button = screen.getByText('show...')
     await user.click(button)
 
     const div = container.querySelector('.togglableContent')
@@ -35,13 +37,14 @@ describe('<Togglable />', () => {
 
   test('toggled content can be closed', async () => {
     const user = userEvent.setup()
-    const btn = screen.getByText('show')
-    const cancelbtn = screen.getByText('cancel')
-    await user.click(btn)
-    await user.click(cancelbtn)
 
-    expect(container.querySelector('.togglableContent')).toHaveStyle(
-      'display : none'
-    )
+    const button = screen.getByText('show...')
+    await user.click(button)
+
+    const closeButton = screen.getByText('cancel')
+    await user.click(closeButton)
+
+    const div = container.querySelector('.togglableContent')
+    expect(div).toHaveStyle('display: none')
   })
 })
