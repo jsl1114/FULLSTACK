@@ -110,8 +110,8 @@ input {
   justify-content: start;
   padding: 7px 13px;
   margin: 10px 25px;
-  height: 300px;
-  width: 700px;
+  height: 0.3vh;
+  width: 0.3vw;
 }
 
 a button {
