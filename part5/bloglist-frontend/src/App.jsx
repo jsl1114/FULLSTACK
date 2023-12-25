@@ -23,11 +23,10 @@ const App = () => {
   useEffect(() => {
     const userJSON = window.localStorage.getItem('loggedBlogappUser')
     if (userJSON) {
-      console.log(userJSON)
       const user = JSON.parse(userJSON)
       setUser(user)
-      blogService.setToken(user.data.token)
-      setNotificationMsg(`Logged in as ${user.data.name}`)
+      blogService.setToken(user.token)
+      setNotificationMsg(`Logged in as ${user.name}`)
       setTimeout(() => {
         setNotificationMsg(null)
       }, 2000)
@@ -85,7 +84,7 @@ const App = () => {
         <div>
           password
           <input
-            type='text'
+            type='password'
             name='Password'
             value={password}
             onChange={({ target }) => setPassword(target.value)}
@@ -112,7 +111,7 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (error) {
-      setNotificationMsg('Wrong username or password')
+      setNotificationMsg(`Wrong credentials. ${error.message}`)
       setTimeout(() => {
         setNotificationMsg(null)
       }, 2000)
@@ -145,7 +144,7 @@ const App = () => {
       <Header />
 
       <div className='header'>
-        user: {user.data.name}
+        user: {user.name}
         <Notification msg={notificationMsg} />
         <button
           className='logoutbtn'
@@ -176,7 +175,7 @@ const App = () => {
             likes={blog.likes}
             handleLike={() => handleLike(blog.id)}
             handleDelete={() => handleDelete(blog.id)}
-            user={user.data.name}
+            user={user.name}
           />
         ))}
       </div>

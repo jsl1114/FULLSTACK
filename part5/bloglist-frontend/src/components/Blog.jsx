@@ -67,7 +67,7 @@ const Blog = ({
           size={20}
           onClick={handleLike}
         />
-        <div>{likes}</div>
+        <div className='likescnt'>{likes}</div>
       </div>
       <em className='postperson'>Posted by {user}</em>
     </div>

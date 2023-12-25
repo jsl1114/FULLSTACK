@@ -31,6 +31,7 @@ const BlogForm = ({ onSave }) => {
       >
         <label htmlFor='title'>title</label>
         <input
+          id='new-blog-title'
           name='title'
           type='text'
           value={title}
@@ -43,6 +44,7 @@ const BlogForm = ({ onSave }) => {
         <label htmlFor='author'>author</label>
         <input
           name='author'
+          id='new-blog-author'
           type='text'
           value={author}
           placeholder='enter author here'
@@ -54,6 +56,7 @@ const BlogForm = ({ onSave }) => {
         <label htmlFor='url'>url</label>
         <input
           name='url'
+          id='new-blog-url'
           type='text'
           value={url}
           placeholder='enter url here'
@@ -63,6 +66,7 @@ const BlogForm = ({ onSave }) => {
           }}
         />
         <input
+          id='new-blog-save'
           type='submit'
           value='Save'
         />

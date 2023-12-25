@@ -37,7 +37,7 @@ const Blog = ({
         onClick={handleLike}
         className='likebtn'
       />
-      <div>{likes}</div>
+      <div className='likescount'>{likes}</div>
       <em className='postperson'>Posted by {user}</em>
     </div>
   )
