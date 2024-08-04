@@ -1,7 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 
-// working but depreciated
 import { createStore } from 'redux'
 import reducer from './reducer'
 
