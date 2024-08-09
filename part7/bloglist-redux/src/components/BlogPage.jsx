@@ -33,6 +33,8 @@ const BlogPage = () => {
   const handleCommentPost = (id, content) => {
     blogService.postComment(id, content).then((res) => {
       dispatch(setBlogs(blogs.map((b) => (b.id === id ? res.data : b))))
+      setCommentInput('')
+      dispatch(changeNotification(`You posted a comment <${content}>`))
     })
   }
 
