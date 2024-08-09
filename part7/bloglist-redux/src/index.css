@@ -1,0 +1,150 @@
+body {
+  font-family: 'Poppins', sans-serif;
+}
+
+html {
+  /* background-image: url('../assets/bg.png');
+  background-size: cover;
+  background-position: center; */
+  background-color: cornsilk;
+}
+
+div {
+  border-radius: 20px;
+}
+h4 {
+  color: gray;
+}
+
+input {
+  border: none;
+  width: 30%;
+  height: 35px;
+  border-bottom: 5px;
+}
+
+.loginForm {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+.logoutbtn {
+  border: none;
+}
+
+.logoutbtn:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.viewbtn {
+  border: none;
+  border-radius: 5px;
+  background-color: rgb(218, 177, 149);
+  color: white;
+  text-align: center;
+  font-size: 15px;
+  padding: 10px 15px;
+  transition-duration: 0.3s;
+}
+
+.viewbtn:hover {
+  cursor: pointer;
+  box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24),
+    0 17px 50px 0 rgba(0, 0, 0, 0.19);
+  background-color: rgb(54, 36, 9);
+  color: rgb(218, 177, 149);
+}
+
+.deletebtn {
+  top: 10px;
+  right: 5px;
+  position: absolute;
+  color: red;
+}
+
+.deletebtn:hover {
+  cursor: pointer;
+}
+
+.likebtn {
+  border: none;
+  background: none;
+  position: absolute;
+  bottom: 10px;
+  right: 5px;
+}
+
+.likebtn:hover {
+  cursor: pointer;
+}
+
+.header {
+  text-align: center;
+  color: darkblue;
+}
+
+.header2 {
+  text-align: center;
+}
+
+.blogform {
+  text-align: center;
+  border: 2px solid;
+}
+
+.blogformprop {
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 10px;
+}
+
+.blogformprop input {
+  margin: 5px 5px;
+}
+
+.blogs {
+  border: 2px solid;
+  margin-top: 10px;
+}
+
+.singleblog {
+  position: relative;
+  border: 2px solid rgb(66, 60, 52);
+  border-radius: 10px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  padding: 7px 13px;
+  margin: 10px 25px;
+  height: 50vh;
+  width: 40vw;
+}
+
+.postperson {
+  position: absolute;
+  bottom: 3px;
+  left: 3px;
+}
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td,
+th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
