@@ -1,9 +1,18 @@
+import { useQuery } from '@apollo/client'
+import { ALL_BOOKS_EXCEPT_GENRE } from '../queries'
+
 const Books = (props) => {
+  const res = useQuery(ALL_BOOKS_EXCEPT_GENRE)
+
   if (!props.show) {
     return null
   }
 
-  const books = []
+  if (res.loading) {
+    return <div>loading...</div>
+  }
+
+  const books = res.data.allBooks
 
   return (
     <div>
