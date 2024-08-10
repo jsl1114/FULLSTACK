@@ -163,6 +163,15 @@ const resolvers = {
   Mutation: {
     addBook: (root, args) => {
       books.push({ ...args })
+      const authorMatch = false
+      authors.forEach((a) => {
+        if (a.name === args.author) {
+          authorMatch = true
+          return
+        }
+      })
+      authorMatch ? authors : authors.push({ name: args.author })
+
       return { ...args }
     },
     editAuthor: (root, args) => {
