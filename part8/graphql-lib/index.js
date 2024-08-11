@@ -93,16 +93,13 @@ let books = [
   },
 ]
 
-/*
-  you can remove the placeholder query once your first one has been implemented 
-*/
-
 const typeDefs = `
   type Book {
     title: String!
-    author: String!
+    author: Author!
     published: Int!
     genres: [String!]!
+    id: ID!
   }
 
   type Author {
@@ -133,67 +130,88 @@ const typeDefs = `
   }
 `
 
+const mongoose = require('mongoose')
+mongoose.set('strictQuery', false)
+const Book = require('./models/book')
+const Author = require('./models/author')
+require('dotenv').config()
+
+const MONGODB_URI = process.env.MONGODB_URI
+
+console.log(`connecting to ${MONGODB_URI}`)
+
+mongoose
+  .connect(MONGODB_URI)
+  .then(() => {
+    console.log('connected to mongoDB')
+  })
+  .catch((err) => {
+    console.log(`ERR connect to mongoDB: ${err.message}`)
+  })
+
 const resolvers = {
   Query: {
-    bookCount: () => books.length,
-    authorCount: () => {
-      return authors.length
+    bookCount: async () => await Book.collection.countDocuments(),
+    authorCount: async () => await Author.collection.countDocuments(),
+    allBooks: async (root, { author, genre }) => {
+      const authorMatch = await Author.find({ name: author })
+
+      if (author && genre) {
+        return await Book.find({
+          author: authorMatch.id,
+          genres: { $in: [genre] },
+        }).populate('author')
+      } else if (author) {
+        return await Book.find({
+          author: authorMatch.id,
+        }).populate('author')
+      } else if (genre) {
+        return await Book.find({
+          genres: genre,
+        }).populate('author')
+      }
+      return await Book.find({}).populate('author')
     },
-    allBooks: (root, args) => {
-      if (!args.author && !args.genre) {
-        return books
-      }
-
-      let filtered = books
-
-      if (args.author) {
-        filtered = filtered.filter((b) => b.author === args.author)
-      }
-
-      if (args.genre) {
-        filtered = filtered.filter((b) => b.genres.includes(args.genre))
-      }
-
-      return filtered
-    },
-    allAuthors: () => {
-      return authors
+    allAuthors: async () => {
+      return Author.find({})
     },
   },
   Mutation: {
-    addBook: (root, args) => {
-      books.push({ ...args })
-      const authorMatch = false
-      authors.forEach((a) => {
-        if (a.name === args.author) {
-          authorMatch = true
-          return
-        }
-      })
-      authorMatch ? authors : authors.push({ name: args.author })
+    addBook: async (root, args) => {
+      let authorMatch = await Author.findOne({ name: args.author })
 
-      return { ...args }
+      if (!authorMatch) {
+        const author = new Author({ name: args.author })
+        await author.save()
+      }
+
+      authorMatch = await Author.findOne({ name: args.author })
+
+      const book = new Book({ ...args, author: authorMatch })
+      await book.save()
+
+      return book
     },
-    editAuthor: (root, args) => {
-      const found = authors.find((author) => author.name === args.name)
+    editAuthor: async (root, args) => {
+      const found = await Author.findOne({ name: args.name })
 
       if (!found) {
         return null
       }
 
-      authors = authors.map((author) =>
-        author.name === args.name ? { ...author, born: args.setBornTo } : author
-      )
+      found.born = args.setBornTo
 
-      return authors.find((author) => author.name === args.name)
+      await found.save()
+
+      return found
     },
   },
   Author: {
-    bookCount: (root) => {
-      const authorName = root.name
-      const authorBooks = books.filter((b) => b.author === authorName)
+    bookCount: async (root) => {
+      const foundAuthor = await Author.findOne({ name: root.name })
+      const foundBooks = await Book.find({ author: foundAuthor.id })
 
-      return authorBooks.length
+      return foundBooks.length
     },
   },
 }
