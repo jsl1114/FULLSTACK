@@ -134,6 +134,7 @@ const mongoose = require('mongoose')
 mongoose.set('strictQuery', false)
 const Book = require('./models/book')
 const Author = require('./models/author')
+const { GraphQLError } = require('graphql')
 require('dotenv').config()
 
 const MONGODB_URI = process.env.MONGODB_URI
@@ -182,13 +183,32 @@ const resolvers = {
 
       if (!authorMatch) {
         const author = new Author({ name: args.author })
-        await author.save()
+        try {
+          await author.save()
+        } catch (error) {
+          throw new GraphQLError('failed saving new author', {
+            extensions: {
+              code: 'BAD_USER_INPUT',
+            },
+          })
+        }
       }
 
       authorMatch = await Author.findOne({ name: args.author })
 
       const book = new Book({ ...args, author: authorMatch })
-      await book.save()
+
+      try {
+        await book.save()
+      } catch (error) {
+        throw new GraphQLError('saving book failed', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args,
+            error,
+          },
+        })
+      }
 
       return book
     },
@@ -201,7 +221,17 @@ const resolvers = {
 
       found.born = args.setBornTo
 
-      await found.save()
+      try {
+        await found.save()
+      } catch (error) {
+        throw new GraphQLError('failed saving edited author', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args.name,
+            error,
+          },
+        })
+      }
 
       return found
     },
