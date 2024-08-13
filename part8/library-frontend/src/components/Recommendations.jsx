@@ -1,6 +1,11 @@
 /* eslint-disable react/no-unescaped-entities */
 
-const Recommendations = ({ show, me, books }) => {
+import { useQuery } from '@apollo/client'
+import { ALL_BOOKS } from '../queries'
+
+const Recommendations = ({ show, me }) => {
+  const books = useQuery(ALL_BOOKS, { variables: { genre: me.favoriteGenre } })
+
   if (!show) {
     return null
   }

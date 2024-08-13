@@ -16,6 +16,10 @@ const App = () => {
   const books = useQuery(ALL_BOOKS)
   const user = useQuery(ME)
 
+  if (authors.loading || books.loading || user.loading) {
+    return <div>loading...</div>
+  }
+
   const logout = () => {
     localStorage.clear()
     setToken(null)
@@ -45,7 +49,6 @@ const App = () => {
           setToken={setToken}
           setPage={setPage}
           user={user}
-          books={books}
         />
       </div>
     )
@@ -77,7 +80,6 @@ const App = () => {
       <Recommendations
         show={page === 'rec'}
         me={user}
-        books={books}
       />
     </div>
   )
