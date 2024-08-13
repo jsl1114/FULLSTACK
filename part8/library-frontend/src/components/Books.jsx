@@ -30,13 +30,13 @@ const Books = (props) => {
             <th>published</th>
             <th>genres</th>
           </tr>
-          {books.map((a) => (
-            <tr key={a.title}>
-              <td>{a.title}</td>
-              <td>{a.author.name}</td>
-              <td>{a.published}</td>
-              {a.genres.map((g, i) => (
-                <td key={`${a.title}-${a.genres[i]}`}>{a.genres[i]}</td>
+          {books.map((b) => (
+            <tr key={b.title}>
+              <td>{b.title}</td>
+              <td>{b.author.name}</td>
+              <td>{b.published}</td>
+              {b.genres.map((g, i) => (
+                <td key={`${b.title}-${b.genres[i]}`}>{b.genres[i]}</td>
               ))}
             </tr>
           ))}
