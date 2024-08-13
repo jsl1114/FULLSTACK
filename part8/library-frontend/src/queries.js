@@ -51,3 +51,11 @@ export const SET_AUTHOR_BIRTH_YEAR = gql`
     }
   }
 `
+
+export const LOGIN = gql`
+  mutation Login($username: String!, $password: String!) {
+    login(username: $username, password: $password) {
+      value
+    }
+  }
+`
