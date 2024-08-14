@@ -1,12 +1,13 @@
 import { useState } from 'react'
-import { useApolloClient, useQuery } from '@apollo/client'
+import { useApolloClient, useQuery, useSubscription } from '@apollo/client'
 
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import LoginForm from './components/LoginForm'
 import Recommendations from './components/Recommendations'
-import { ALL_AUTHORS, ALL_BOOKS, ME } from './queries'
+import { ALL_AUTHORS, ALL_BOOKS, BOOK_ADDED, ME } from './queries'
+import { updateCache } from './utils/updateCache'
 
 const App = () => {
   const [page, setPage] = useState('books')
@@ -15,6 +16,16 @@ const App = () => {
   const authors = useQuery(ALL_AUTHORS)
   const books = useQuery(ALL_BOOKS)
   const user = useQuery(ME)
+
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data, client }) => {
+      const addedBook = data.data.bookAdded
+
+      updateCache(client.cache, { query: ALL_BOOKS }, addedBook)
+
+      window.alert(`new book ${addedBook.title} added!`)
+    },
+  })
 
   if (authors.loading || books.loading || user.loading) {
     return <div>loading...</div>
