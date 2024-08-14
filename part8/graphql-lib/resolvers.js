@@ -1,8 +1,11 @@
+const { PubSub } = require('graphql-subscriptions')
+const pubsub = new PubSub()
+
 const Book = require('./models/book')
 const Author = require('./models/author')
 const User = require('./models/user')
 const jwt = require('jsonwebtoken')
-const { GraphQLError } = require('graphql')
+const { GraphQLError, subscribe } = require('graphql')
 require('dotenv').config()
 
 const resolvers = {
@@ -77,6 +80,8 @@ const resolvers = {
         })
       }
 
+      pubsub.publish('BOOK_ADDED', { bookAdded: book })
+
       return book
     },
     editAuthor: async (root, args, context) => {
@@ -150,6 +155,11 @@ const resolvers = {
       const foundBooks = await Book.find({ author: foundAuthor.id })
 
       return foundBooks.length
+    },
+  },
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterator('BOOK_ADDED'),
     },
   },
 }
