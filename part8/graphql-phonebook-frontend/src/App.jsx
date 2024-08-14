@@ -1,18 +1,29 @@
 import { useState } from 'react'
-import { useApolloClient, useQuery } from '@apollo/client'
+import { useApolloClient, useQuery, useSubscription } from '@apollo/client'
 
 import Persons from './components/Persons'
 import PersonForm from './components/PersonForm'
 import LoginForm from './components/LoginForm'
 import PhoneForm from './components/PhoneForm'
 
-import { ALL_PERSONS } from './queries'
+import { ALL_PERSONS, PERSON_ADDED } from './queries'
+
+import { updateCache } from './utils/updateCache'
 
 const App = () => {
   const [token, setToken] = useState(null)
   const [errorMsg, setErrorMsg] = useState('')
   const result = useQuery(ALL_PERSONS)
   const client = useApolloClient()
+
+  useSubscription(PERSON_ADDED, {
+    onData: ({ data, client }) => {
+      const addedPerson = data.data.personAdded
+      notify(`${addedPerson.name} added`)
+
+      updateCache(client.cache, { query: ALL_PERSONS }, addedPerson)
+    },
+  })
 
   const logout = () => {
     setToken(null)

@@ -1,17 +1,42 @@
 import { gql } from '@apollo/client'
 
+const PERSON_DETAILS = gql`
+  fragment personDetails on Person {
+    id
+    name
+    phone
+    address {
+      street
+      city
+    }
+  }
+`
+
+export const PERSON_ADDED = gql`
+  subscription {
+    personAdded {
+      ...PersonDetails
+    }
+  }
+  ${PERSON_DETAILS}
+`
+
 export const ALL_PERSONS = gql`
   query {
     allPersons {
-      name
-      phone
-      id
-      address {
-        street
-        city
-      }
+      ...personDetails
     }
   }
+  ${PERSON_DETAILS}
+`
+
+export const FIND_PERSON = gql`
+  query findPersonByName($nameToSearch: String!) {
+    findPerson(name: $nameToSearch) {
+      personDetails
+    }
+  }
+  ${PERSON_DETAILS}
 `
 
 export const CREATE_PERSON = gql`
@@ -29,20 +54,6 @@ export const CREATE_PERSON = gql`
         city
       }
       id
-    }
-  }
-`
-
-export const FIND_PERSON = gql`
-  query findPersonByName($nameToSearch: String!) {
-    findPerson(name: $nameToSearch) {
-      name
-      phone
-      id
-      address {
-        street
-        city
-      }
     }
   }
 `
