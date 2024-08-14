@@ -32,7 +32,7 @@ const resolvers = {
       return await Book.find({}).populate('author')
     },
     allAuthors: async () => {
-      return Author.find({})
+      return Author.find({}).populate('books')
     },
     me: (root, args, context) => {
       return context.currentUser
